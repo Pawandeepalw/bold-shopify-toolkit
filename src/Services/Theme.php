@@ -3,37 +3,67 @@
 namespace BoldApps\ShopifyToolkit\Services;
 
 use Illuminate\Support\Collection;
+use BoldApps\ShopifyToolkit\Models\Theme as ShopifyTheme;
 
-/**
- * Class Theme.
- */
 class Theme extends Base
 {
     /**
-     * @param $id
+     * @param ShopifyTheme $shopifyTheme
      *
-     * @return \BoldApps\ShopifyToolkit\Models\Theme
+     * @return ShopifyTheme
      */
-    public function getById($id)
+    public function create(ShopifyTheme $shopifyTheme)
     {
-        $raw = $this->client->get("admin/themes/$id.json");
+        $serializedModel = ['theme' => $this->serializeModel($shopifyTheme)];
 
-        return $this->unserializeModel($raw['theme'], \BoldApps\ShopifyToolkit\Models\Theme::class);
+        $raw = $this->client->post("{$this->getApiBasePath()}/themes.json", [], $serializedModel);
+
+        return $this->unserializeModel($raw['theme'], ShopifyTheme::class);
     }
 
     /**
-     * @return \BoldApps\ShopifyToolkit\Models\Theme
+     * @param ShopifyTheme $shopifyTheme
+     *
+     * @return ShopifyTheme
+     */
+    public function update(ShopifyTheme $shopifyTheme)
+    {
+        $id = $shopifyTheme->getId();
+        $serializedModel = ['theme' => $this->serializeModel($shopifyTheme)];
+
+        $raw = $this->client->put("{$this->getApiBasePath()}/themes/$id.json", [], $serializedModel);
+
+        return $this->unserializeModel($raw['theme'], ShopifyTheme::class);
+    }
+
+    /**
+     * @param $id
+     *
+     * @return ShopifyTheme
+     */
+    public function getById($id)
+    {
+        $raw = $this->client->get("{$this->getApiBasePath()}/themes/$id.json");
+
+        return $this->unserializeModel($raw['theme'], ShopifyTheme::class);
+    }
+
+    /**
+     * @return ShopifyTheme
      */
     public function getMain()
     {
         $filter = ['role' => 'main'];
 
-        $raw = $this->client->get('admin/themes.json', $filter);
+        $raw = $this->client->get("{$this->getApiBasePath()}/themes.json", $filter);
 
-        return $this->unserializeModel($raw['themes'][0], \BoldApps\ShopifyToolkit\Models\Theme::class);
+        return $this->unserializeModel($raw['themes'][0], ShopifyTheme::class);
     }
 
     /**
+     * @deprecated Use getByParams()
+     * @see getByParams()
+     *
      * @param array $filter
      *
      * @return Collection
@@ -43,7 +73,23 @@ class Theme extends Base
         $raw = $this->client->get('admin/themes.json', $filter);
 
         $themes = array_map(function ($theme) {
-            return $this->unserializeModel($theme, \BoldApps\ShopifyToolkit\Models\Theme::class);
+            return $this->unserializeModel($theme, ShopifyTheme::class);
+        }, $raw['themes']);
+
+        return new Collection($themes);
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return Collection
+     */
+    public function getByParams($params = [])
+    {
+        $raw = $this->client->get("{$this->getApiBasePath()}/themes.json", $params);
+
+        $themes = array_map(function ($theme) {
+            return $this->unserializeModel($theme, ShopifyTheme::class);
         }, $raw['themes']);
 
         return new Collection($themes);

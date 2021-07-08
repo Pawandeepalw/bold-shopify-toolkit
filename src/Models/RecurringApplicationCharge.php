@@ -3,86 +3,68 @@
 namespace BoldApps\ShopifyToolkit\Models;
 
 use BoldApps\ShopifyToolkit\Contracts\Serializeable;
+use BoldApps\ShopifyToolkit\Traits\HasAttributesTrait;
 
-/**
- * Class RecurringApplicationCharge
- * @package BoldApps\ShopifyToolkit\Models
- */
-class RecurringApplicationCharge implements Serializeable
+class RecurringApplicationCharge implements Serializeable, \JsonSerializable
 {
-    /**
-     * @var int
-     */
+    use HasAttributesTrait;
+
+    /** @var int */
     protected $id;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     protected $activatedOn;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     protected $billingOn;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     protected $cancelledOn;
-    /**
-     * @var float
-     */
+
+    /** @var float */
     protected $cappedAmount;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     protected $confirmationUrl;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     protected $createdAt;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     protected $name;
-    /**
-     * @var float
-     */
+
+    /** @var float */
     protected $price;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     protected $returnUrl;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     protected $status;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     protected $terms;
-    /**
-     * @var boolean
-     */
+
+    /** @var bool */
     protected $test;
-    /**
-     * @var int
-     */
+
+    /** @var int */
     protected $trialDays;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     protected $trialEndsOn;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     protected $updatedAt;
-    /**
-     * @var int
-     */
+
+    /** @var int */
     protected $apiClientId;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     protected $decoratedReturnUrl;
 
+    /** @var float */
+    protected $balanceRemaining;
 
     /**
      * @return int
@@ -90,6 +72,14 @@ class RecurringApplicationCharge implements Serializeable
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return int
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**
@@ -130,6 +120,22 @@ class RecurringApplicationCharge implements Serializeable
     public function setCappedAmount($cappedAmount)
     {
         $this->cappedAmount = $cappedAmount;
+    }
+
+    /**
+     * @return float
+     */
+    public function getBalanceRemaining()
+    {
+        return $this->balanceRemaining;
+    }
+
+    /**
+     * @param $balanceRemaining
+     */
+    public function seBalanceRemaining($balanceRemaining)
+    {
+        $this->balanceRemaining = $balanceRemaining;
     }
 
     /**
@@ -220,7 +226,6 @@ class RecurringApplicationCharge implements Serializeable
         $this->terms = $terms;
     }
 
-
     /**
      * @return bool
      */
@@ -235,7 +240,6 @@ class RecurringApplicationCharge implements Serializeable
     public function setTest($test)
     {
         $this->test = $test;
-
     }
 
     /**
@@ -285,5 +289,4 @@ class RecurringApplicationCharge implements Serializeable
     {
         return $this->decoratedReturnUrl;
     }
-
 }

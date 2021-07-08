@@ -2,26 +2,22 @@
 
 namespace BoldApps\ShopifyToolkit\Services;
 
-
 use BoldApps\ShopifyToolkit\Models\CustomCollection as ShopifyCustomCollection;
-
 use Illuminate\Support\Collection;
 
-/**
- * Class CustomCollection
- */
 class CustomCollection extends CollectionEntity
 {
     /**
      * @param ShopifyCustomCollection $collection
-     * @param bool $publish
+     * @param bool                    $publish
+     *
      * @return object
      */
     public function create(ShopifyCustomCollection $collection, $publish = true)
     {
         $serializedModel = ['custom_collection' => array_merge($this->serializeModel($collection), ['published' => $publish])];
 
-        $raw = $this->client->post('admin/custom_collections.json', [], $serializedModel);
+        $raw = $this->client->post("{$this->getApiBasePath()}/custom_collections.json", [], $serializedModel);
 
         return $this->unserializeModel($raw['custom_collection'], ShopifyCustomCollection::class);
     }
@@ -33,12 +29,15 @@ class CustomCollection extends CollectionEntity
      */
     public function getById($id)
     {
-        $raw = $this->client->get("admin/custom_collections/$id.json");
+        $raw = $this->client->get("{$this->getApiBasePath()}/custom_collections/$id.json");
 
         return $this->unserializeModel($raw['custom_collection'], ShopifyCustomCollection::class);
     }
 
     /**
+     * @deprecated Use getByParams()
+     * @see getByParams()
+     *
      * @param int   $page
      * @param int   $limit
      * @param array $filter
@@ -57,13 +56,13 @@ class CustomCollection extends CollectionEntity
     }
 
     /**
-     * @param $parms
+     * @param $params
      *
      * @return \Illuminate\Support\Collection
      */
-    public function getByParams($parms)
+    public function getByParams($params)
     {
-        $raw = $this->client->get('admin/custom_collections.json', $parms);
+        $raw = $this->client->get("{$this->getApiBasePath()}/custom_collections.json", $params);
 
         $collection = array_map(function ($product) {
             return $this->unserializeModel($product, ShopifyCustomCollection::class);
@@ -74,25 +73,26 @@ class CustomCollection extends CollectionEntity
 
     /**
      * @param ShopifyCustomCollection $collection
+     *
      * @return object
      */
     public function update(ShopifyCustomCollection $collection)
     {
         $serializedModel = ['custom_collection' => $this->serializeModel($collection)];
 
-        $raw = $this->client->put("admin/custom_collections/{$collection->getId()}.json", [], $serializedModel);
+        $raw = $this->client->put("{$this->getApiBasePath()}/custom_collections/{$collection->getId()}.json", [], $serializedModel);
 
         return $this->unserializeModel($raw['custom_collection'], ShopifyCustomCollection::class);
     }
 
     /**
      * @param ShopifyCustomCollection $collection
-     * @return object
      *
+     * @return object
      */
     public function delete(ShopifyCustomCollection $collection)
     {
-        return $this->client->delete("admin/custom_collections/{$collection->getId()}.json");
+        return $this->client->delete("{$this->getApiBasePath()}/custom_collections/{$collection->getId()}.json");
     }
 
     /**
@@ -102,7 +102,7 @@ class CustomCollection extends CollectionEntity
      */
     public function count($filter = [])
     {
-        $raw = $this->client->get('admin/custom_collections/count.json', $filter);
+        $raw = $this->client->get("{$this->getApiBasePath()}/custom_collections/count.json", $filter);
 
         return $raw['count'];
     }
@@ -114,7 +114,7 @@ class CustomCollection extends CollectionEntity
      */
     public function countByParams($filter = [])
     {
-        $raw = $this->client->get('admin/custom_collections/count.json', $filter);
+        $raw = $this->client->get("{$this->getApiBasePath()}/custom_collections/count.json", $filter);
 
         return $raw['count'];
     }

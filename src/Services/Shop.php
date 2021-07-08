@@ -6,9 +6,6 @@ use BoldApps\ShopifyToolkit\Models\Metafield as ShopifyMetafield;
 use BoldApps\ShopifyToolkit\Models\Shop as ShopifyShop;
 use Illuminate\Support\Collection;
 
-/**
- * Class Shop.
- */
 class Shop extends Base
 {
     /**
@@ -24,22 +21,22 @@ class Shop extends Base
      */
     public function asArray()
     {
-        $raw = $this->client->get('admin/shop.json');
+        $raw = $this->client->get("{$this->getApiBasePath()}/shop.json");
 
         return $raw['shop'];
     }
 
     /**
-     * @param ShopifyShop $shop
+     * @param ShopifyShop      $shop
      * @param ShopifyMetafield $metafield
      *
-     * @return Collection
+     * @return ShopifyMetafield | object
      */
     public function createOrUpdateMetafield(ShopifyShop $shop, ShopifyMetafield $metafield)
     {
-        $serializedModel = [ 'metafield' => array_merge($this->serializeModel($metafield)) ];
+        $serializedModel = ['metafield' => array_merge($this->serializeModel($metafield))];
 
-        $raw = $this->client->post("admin/{$shop->getId()}/metafields.json", [], $serializedModel);
+        $raw = $this->client->post("{$this->getApiBasePath()}/metafields.json", [], $serializedModel);
 
         return $this->unserializeModel($raw['metafield'], ShopifyMetafield::class);
     }
@@ -51,17 +48,19 @@ class Shop extends Base
      */
     public function getMetafield(ShopifyMetafield $metafield)
     {
-        $raw = $this->client->get("admin/metafields/{$metafield->getId()}.json");
+        $raw = $this->client->get("{$this->getApiBasePath()}/metafields/{$metafield->getId()}.json");
 
         return $this->unserializeModel($raw['metafield'], ShopifyMetafield::class);
     }
 
     /**
+     * @param array $params
+     *
      * @return Collection
      */
-    public function getMetafields()
+    public function getMetafields(array $params = [])
     {
-        $raw = $this->client->get('admin/metafields.json');
+        $raw = $this->client->get("{$this->getApiBasePath()}/metafields.json", $params);
 
         $metafields = array_map(function ($metafield) {
             return $this->unserializeModel($metafield, ShopifyMetafield::class);
@@ -77,6 +76,6 @@ class Shop extends Base
      */
     public function deleteMetafield(ShopifyMetafield $metafield)
     {
-        return $this->client->delete("admin/metafields/{$metafield->getId()}.json");
+        return $this->client->delete("{$this->getApiBasePath()}/metafields/{$metafield->getId()}.json");
     }
 }

@@ -1,164 +1,291 @@
 <?php
+
 namespace BoldApps\ShopifyToolkit\Models;
 
 use BoldApps\ShopifyToolkit\Contracts\Serializeable;
+use BoldApps\ShopifyToolkit\Traits\HasAttributesTrait;
 
+class Fulfillment implements Serializeable, \JsonSerializable
+{
+    use HasAttributesTrait;
 
-class Fulfillment implements Serializeable {
+    /** @var string */
+    protected $createdAt;
 
-	/** @var string */
-	protected $createdAt;
+    /** @var int */
+    protected $id;
 
-	/** @var int */
-	protected $id;
+    /** @var array */
+    protected $lineItems;
 
-	/** @var array */
-	protected $lineItems;
+    /** @var bool */
+    protected $notifyCustomer;
 
-	/** @var bool */
-	protected $notifyCustomer;
+    /** @var int */
+    protected $orderId;
 
-	/** @var int */
-	protected $orderId;
+    /** @var array */
+    protected $receipt;
 
-	/** @var array */
-	protected $receipt;
+    /** @var string */
+    protected $service;
 
-	/** @var string */
-	protected $status;
+    /** @var string */
+    protected $shipmentStatus;
 
-	/** @var string */
-	protected $trackingCompany;
+    /** @var string */
+    protected $status;
 
-	/** @var string */
-	protected $trackingNumbers;
+    /** @var string */
+    protected $trackingCompany;
 
-	/** @var string */
-	protected $trackingUrls;
+    /** @var string */
+    protected $trackingNumbers;
 
-	/** @var string */
-	protected $updatedAt;
+    /** @var string */
+    protected $trackingUrls;
 
-	/** @var string */
-	protected $variantInventoryManagement;
+    /** @var string */
+    protected $updatedAt;
 
-	/**
-	 * @return int
-	 */
-	public function getOrderId() {
-		return $this->orderId;
-	}
+    /** @var string */
+    protected $variantInventoryManagement;
 
-	/**
-	 * @param int $orderId
-	 */
-	public function setOrderId($orderId) {
-		$this->orderId = $orderId;
-	}
+    /** @var int */
+    protected $locationId;
 
-	/**
-	 * @return bool
-	 */
-	public function getNotifyCustomer() {
-		return $this->notifyCustomer;
-	}
+    /** @var string */
+    protected $name;
 
-	/**
-	 * @param bool $notifyCustomer
-	 */
-	public function setNotifyCustomer($notifyCustomer) {
-		$this->notifyCustomer = $notifyCustomer;
-	}
+    /**
+     * @return int
+     */
+    public function getOrderId()
+    {
+        return $this->orderId;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getCreatedAt() {
-		return $this->createdAt;
-	}
+    /**
+     * @param int $orderId
+     */
+    public function setOrderId($orderId)
+    {
+        $this->orderId = $orderId;
+    }
 
-	/**
-	 * @param string $createdAt
-	 */
-	public function setCreatedAt($createdAt) {
-		$this->createdAt = $createdAt;
-	}
+    /**
+     * @return bool
+     */
+    public function getNotifyCustomer()
+    {
+        return $this->notifyCustomer;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getUpdatedAt() {
-		return $this->updatedAt;
-	}
+    /**
+     * @param bool $notifyCustomer
+     */
+    public function setNotifyCustomer($notifyCustomer)
+    {
+        $this->notifyCustomer = $notifyCustomer;
+    }
 
-	/**
-	 * @param string $updatedAt
-	 */
-	public function setUpdatedAt($updatedAt) {
-		$this->updatedAt = $updatedAt;
-	}
+    /**
+     * @return string
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getId() {
-		return $this->id;
-	}
+    /**
+     * @param string $createdAt
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
 
-	/**
-	 * @param string $id
-	 */
-	public function setId($id) {
-		$this->id = $id;
-	}
+    /**
+     * @return string
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getLineItems() {
-		return $this->lineItems;
-	}
+    /**
+     * @param string $updatedAt
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getReceipt() {
-		return $this->receipt;
-	}
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getStatus() {
-		return $this->status;
-	}
+    /**
+     * @param string $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getTrackingCompany() {
-		return $this->trackingCompany;
-	}
+    /**
+     * @return array
+     */
+    public function getLineItems()
+    {
+        return $this->lineItems;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getTrackingNumbers() {
-		return $this->trackingNumbers;
-	}
+    /**
+     * @param array $lineItems
+     */
+    public function setLineItems($lineItems)
+    {
+        $this->lineItems = $lineItems;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getTrackingUrls() {
-		return $this->trackingUrls;
-	}
+    /**
+     * @return array
+     */
+    public function getReceipt()
+    {
+        return $this->receipt;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getVariantInventoryManagement() {
-		return $this->variantInventoryManagement;
-	}
+    /**
+     * @return string
+     */
+    public function getService()
+    {
+        return $this->service;
+    }
 
+    /**
+     * @param string $service
+     */
+    public function setService($service)
+    {
+        $this->service = $service;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShipmentStatus()
+    {
+        return $this->shipmentStatus;
+    }
+
+    /**
+     * @param string $shipmentStatus
+     */
+    public function setShipmentStatus($shipmentStatus)
+    {
+        $this->shipmentStatus = $shipmentStatus;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTrackingCompany()
+    {
+        return $this->trackingCompany;
+    }
+
+    /**
+     * @param string $trackingCompany
+     */
+    public function setTrackingCompany($trackingCompany)
+    {
+        $this->trackingCompany = $trackingCompany;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTrackingNumbers()
+    {
+        return $this->trackingNumbers;
+    }
+
+    /**
+     * @param string
+     */
+    public function setTrackingNumbers($trackingNumbers)
+    {
+        $this->trackingNumbers = $trackingNumbers;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTrackingUrls()
+    {
+        return $this->trackingUrls;
+    }
+
+    /**
+     * @param array $trackingUrls
+     */
+    public function setTrackingUrls($trackingUrls)
+    {
+        $this->trackingUrls = $trackingUrls;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVariantInventoryManagement()
+    {
+        return $this->variantInventoryManagement;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLocationId()
+    {
+        return $this->locationId;
+    }
+
+    /**
+     * @param $locationId
+     */
+    public function setLocationId($locationId)
+    {
+        $this->locationId = $locationId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
 }

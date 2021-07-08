@@ -5,22 +5,25 @@ namespace BoldApps\ShopifyToolkit\Services;
 use BoldApps\ShopifyToolkit\Models\Country;
 use BoldApps\ShopifyToolkit\Models\Province;
 use BoldApps\ShopifyToolkit\Models\ShippingZone as ShippingZoneModel;
+use Illuminate\Support\Collection;
 
 class ShippingZone extends Base
 {
-
     /**
-     * @param int $page
-     * @param int $limit
+     * @deprecated Use getByParams()
+     * @see getByParams()
+     *
+     * @param int   $page
+     * @param int   $limit
      * @param array $filter
      *
      * @return Collection
      */
-    public function getAll($page = 1, $limit = 50, $filter = [ ])
+    public function getAll($page = 1, $limit = 50, $filter = [])
     {
         $raw = $this->client->get('admin/shipping_zones.json', array_merge([
             'page' => $page,
-            'limit' => $limit
+            'limit' => $limit,
         ], $filter));
 
         $shippingZones = array_map(function ($zone) {
@@ -32,6 +35,23 @@ class ShippingZone extends Base
         return collect($shippingZones);
     }
 
+    /**
+     * @param array $params
+     *
+     * @return Collection
+     */
+    public function getByParams($params = [])
+    {
+        $raw = $this->client->get("{$this->getApiBasePath()}/shipping_zones.json", $params);
+
+        $shippingZones = array_map(function ($zone) {
+            $zone['countries'] = $this->unserializeCountries($zone['countries']);
+
+            return $this->unserializeModel($zone, ShippingZoneModel::class);
+        }, $raw['shipping_zones']);
+
+        return collect($shippingZones);
+    }
 
     /**
      * @param $data
@@ -51,7 +71,6 @@ class ShippingZone extends Base
 
         return collect($countries);
     }
-
 
     /**
      * @param $data

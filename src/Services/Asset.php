@@ -2,16 +2,13 @@
 
 namespace BoldApps\ShopifyToolkit\Services;
 
+use BoldApps\ShopifyToolkit\Exceptions\NotFoundException;
 use BoldApps\ShopifyToolkit\Models\Asset as AssetModel;
 use BoldApps\ShopifyToolkit\Services\Client as ShopifyClient;
 use BoldApps\ShopifyToolkit\Services\Theme as ShopifyThemeService;
 use BoldApps\ShopifyToolkit\Models\Theme as ShopifyTheme;
 use Illuminate\Support\Collection;
-use GuzzleHttp\Exception\RequestException;
 
-/**
- * Class Asset.
- */
 class Asset extends Base
 {
     /**
@@ -66,20 +63,14 @@ class Asset extends Base
         $themeId = $this->currentTheme->getId();
 
         try {
-            $raw = $this->client->get("admin/themes/$themeId/assets.json", [
+            $raw = $this->client->get("{$this->getApiBasePath()}/themes/$themeId/assets.json", [
                 'asset' => [
                     'key' => $key,
                 ],
             ]);
             $asset = $this->unserializeModel($raw['asset'], AssetModel::class);
-        } catch(RequestException $e) {
-            switch ($e->getResponse()->getStatusCode()) {
-                case 404:
-                    $asset = null;
-                    break;
-                default:
-                    throw $e;
-            }
+        } catch (NotFoundException $e) {
+            $asset = null;
         }
 
         return $asset;
@@ -96,7 +87,7 @@ class Asset extends Base
 
         $themeId = $this->currentTheme->getId();
 
-        $raw = $this->client->get("admin/themes/$themeId/assets.json");
+        $raw = $this->client->get("{$this->getApiBasePath()}/themes/$themeId/assets.json");
 
         $assets = array_map(function ($asset) {
             return $this->unserializeModel($asset, AssetModel::class);
@@ -136,7 +127,7 @@ class Asset extends Base
 
         $serializedModel = ['asset' => $this->serializeModel($asset)];
 
-        $raw = $this->client->put("admin/themes/$themeId/assets.json", [], $serializedModel);
+        $raw = $this->client->put("{$this->getApiBasePath()}/themes/$themeId/assets.json", [], $serializedModel);
 
         return $this->unserializeModel($raw['asset'], AssetModel::class);
     }
@@ -164,7 +155,7 @@ class Asset extends Base
 
         $themeId = $this->currentTheme->getId();
 
-        return $this->client->delete("admin/themes/$themeId/assets.json", [
+        return $this->client->delete("{$this->getApiBasePath()}/themes/$themeId/assets.json", [
             'asset' => [
                 'key' => $key,
             ],

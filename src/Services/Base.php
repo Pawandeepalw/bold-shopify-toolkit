@@ -5,39 +5,34 @@ namespace BoldApps\ShopifyToolkit\Services;
 use BoldApps\ShopifyToolkit\Contracts\Serializeable;
 use BoldApps\ShopifyToolkit\Services\Client as ShopifyClient;
 
-/**
- * Class Base.
- */
 abstract class Base
 {
+    const BASE_API_PATH = 'admin/api/%s';
+
+    const DEFAULT_API_VERSION = '2020-04';
+
+    /** @var string */
+    protected $shopifyApiVersion = self::DEFAULT_API_VERSION;
+
     /*
-     *
      * TODO: Implement an ignoredFields property
      *       We should be able to ignore a specific field on the serialization process (IE: Refund.OrderId)
-     *
      */
 
-
-    /**
-     * @var ShopifyClient
-     */
+    /** @var ShopifyClient */
     protected $client;
 
     /**
      * @var array
-     * Key: JSON name
-     * Value: PHP Variable name (string)
+     *            Key: JSON name
+     *            Value: PHP Variable name (string)
      */
     protected $nameMap = [];
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $unserializationExceptions = [];
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $serializationExceptions = [];
 
     /**
@@ -51,12 +46,16 @@ abstract class Base
     }
 
     /**
-     * @param Serializeable $entity
+     * @param Serializeable|null $entity
      *
      * @return array
      */
-    public function serializeModel(Serializeable $entity)
+    public function serializeModel(Serializeable $entity = null)
     {
+        if (null === $entity) {
+            return null;
+        }
+
         $arr = [];
         $class = new \ReflectionClass($entity);
 
@@ -77,18 +76,26 @@ abstract class Base
         }
 
         return array_filter($arr, function ($a) {
-            return $a !== null;
+            return null !== $a;
         });
     }
 
     /**
-     * @param array $data
+     * @param array|null $data
      * @param $className
      *
      * @return object
      */
-    public function unserializeModel(array $data, $className)
+    public function unserializeModel($data, $className)
     {
+        if (null === $data) {
+            return null;
+        }
+
+        if (!is_array($data)) {
+            throw new \InvalidArgumentException('Invalid argument $data supplied for unserializeModel. Please pass array|null.');
+        }
+
         $class = new \ReflectionClass($className);
 
         $instance = $class->newInstance();
@@ -113,7 +120,7 @@ abstract class Base
 
     /**
      * @param string $property
-     *     *
+     *
      * @return string
      */
     private function getArrayPropertyName($property)
@@ -138,5 +145,29 @@ abstract class Base
         }
 
         return lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $property))));
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiBasePath()
+    {
+        return sprintf(self::BASE_API_PATH, $this->getShopifyApiVersion());
+    }
+
+    /**
+     * @return string
+     */
+    public function getShopifyApiVersion()
+    {
+        return $this->shopifyApiVersion;
+    }
+
+    /**
+     * @param string $shopifyApiVersion
+     */
+    public function setShopifyApiVersion(string $shopifyApiVersion)
+    {
+        $this->shopifyApiVersion = $shopifyApiVersion;
     }
 }

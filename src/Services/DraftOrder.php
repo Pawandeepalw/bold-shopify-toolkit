@@ -12,57 +12,48 @@ use BoldApps\ShopifyToolkit\Models\DraftOrderLineItem as DraftOrderLineItemModel
 use BoldApps\ShopifyToolkit\Services\DraftOrderAppliedDiscount as AppliedDiscountService;
 use BoldApps\ShopifyToolkit\Models\DraftOrderAppliedDiscount as AppliedDiscountModel;
 use BoldApps\ShopifyToolkit\Models\Cart\Cart as CartModel;
+use BoldApps\ShopifyToolkit\Traits\TranslatePropertiesTrait;
 
-/**
- * Class DraftOrder
- */
 class DraftOrder extends Base
 {
-    /**
-     * @var TaxLineService
-     */
+    use TranslatePropertiesTrait;
+
+    /** @var TaxLineService */
     protected $taxLineService;
 
-    /**
-     * @var DraftOrderLineItemService
-     */
+    /** @var DraftOrderLineItemService */
     protected $draftOrderLineItemService;
 
-    /**
-     * @var DraftOrderAppliedDiscount
-     */
+    /** @var DraftOrderAppliedDiscount */
     protected $appliedDiscountService;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $unserializationExceptions = [
         'tax_lines' => 'unserializeTaxLines',
         'line_items' => 'unserializeLineItems',
         'applied_discount' => 'unserializeAppliedDiscount',
     ];
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $serializationExceptions = [
         'taxLines' => 'serializeTaxLines',
         'lineItems' => 'serializeLineItems',
         'appliedDiscount' => 'serializeAppliedDiscount',
     ];
 
-
     /**
      * DraftOrder constructor.
-     * @param Client $client
+     *
+     * @param Client                                    $client
      * @param \BoldApps\ShopifyToolkit\Services\TaxLine $taxLineService
-     * @param DraftOrderLineItemService $draftOrderLineItemService
-     * @param DraftOrderAppliedDiscount $appliedDiscountService
+     * @param DraftOrderLineItemService                 $draftOrderLineItemService
+     * @param DraftOrderAppliedDiscount                 $appliedDiscountService
      */
-    public function __construct(ShopifyClient $client,
-                                TaxLineService $taxLineService,
-                                DraftOrderLineItemService $draftOrderLineItemService,
-                                AppliedDiscountService $appliedDiscountService)
+    public function __construct(
+        ShopifyClient $client,
+        TaxLineService $taxLineService,
+        DraftOrderLineItemService $draftOrderLineItemService,
+        AppliedDiscountService $appliedDiscountService)
     {
         $this->taxLineService = $taxLineService;
         $this->draftOrderLineItemService = $draftOrderLineItemService;
@@ -72,23 +63,25 @@ class DraftOrder extends Base
 
     /**
      * @param $shopifyDraftOrder
+     *
      * @return object
      */
     public function create($shopifyDraftOrder)
     {
         $serializedModel = ['draft_order' => $this->serializeModel($shopifyDraftOrder)];
-        $raw = $this->client->post("admin/draft_orders.json", [], $serializedModel);
+        $raw = $this->client->post("{$this->getApiBasePath()}/draft_orders.json", [], $serializedModel);
 
         return $this->unserializeModel($raw['draft_order'], ShopifyDraftOrder::class);
     }
 
     /**
      * @param $id
+     *
      * @return ShopifyDraftOrder
      */
     public function getById($id)
     {
-        $raw = $this->client->get("admin/draft_orders/$id.json");
+        $raw = $this->client->get("{$this->getApiBasePath()}/draft_orders/$id.json");
 
         $result = $this->unserializeModel($raw['draft_order'], ShopifyDraftOrder::class);
 
@@ -97,6 +90,7 @@ class DraftOrder extends Base
 
     /**
      * @param $data
+     *
      * @return ShopifyDraftOrder
      */
     public function createFromArray($data)
@@ -123,14 +117,25 @@ class DraftOrder extends Base
 
         $cartAttributes = $cart->getAttributes();
         if (!empty($cartAttributes)) {
-            $draftOrderModel->setNoteAttributes([$cartAttributes]);
+            $draftOrderModel->setNoteAttributes(self::translateProperties($cartAttributes));
         }
 
         return $draftOrderModel;
     }
 
     /**
+     * @param $id
+     *
+     * @return object
+     */
+    public function delete($id)
+    {
+        return $this->client->delete("{$this->getApiBasePath()}/draft_orders/$id.json");
+    }
+
+    /**
      * @param $entities
+     *
      * @return array
      */
     protected function serializeTaxLines($entities)
@@ -150,11 +155,11 @@ class DraftOrder extends Base
 
     /**
      * @param $data
+     *
      * @return Collection
      */
     protected function unserializeTaxLines($data)
     {
-
         if (null === $data) {
             return;
         }
@@ -168,6 +173,7 @@ class DraftOrder extends Base
 
     /**
      * @param $entities
+     *
      * @return array
      */
     protected function serializeLineItems($entities)
@@ -187,6 +193,7 @@ class DraftOrder extends Base
 
     /**
      * @param $data
+     *
      * @return Collection
      */
     protected function unserializeLineItems($data)
@@ -204,6 +211,7 @@ class DraftOrder extends Base
 
     /**
      * @param $data
+     *
      * @return object
      */
     protected function unserializeAppliedDiscount($data)
@@ -217,6 +225,7 @@ class DraftOrder extends Base
 
     /**
      * @param $appliedDiscount
+     *
      * @return array
      */
     protected function serializeAppliedDiscount($appliedDiscount)

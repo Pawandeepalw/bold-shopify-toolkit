@@ -1,143 +1,93 @@
 <?php
+
 namespace BoldApps\ShopifyToolkit\Models\Cart;
 
 use BoldApps\ShopifyToolkit\Contracts\Serializeable;
+use BoldApps\ShopifyToolkit\Traits\HasAttributesTrait;
 
-class Item implements Serializeable
+class Item implements Serializeable, \JsonSerializable
 {
-    /**
-     * @var int
-     */
+    use HasAttributesTrait;
+
+    /** @var int */
     protected $id;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $properties;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $quantity;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $variantId;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $key;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $title;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $price;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $originalPrice;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $discountedPrice;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $linePrice;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $originalLinePrice;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $totalDiscount;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $discounts;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $sku;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $grams;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $vendor;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $productId;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     protected $giftCard;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $url;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $image;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $handle;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     protected $requiresShipping;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $productType;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $productTitle;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $productDescription;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $variantTitle;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $variantOptions;
 
     /**
@@ -571,5 +521,4 @@ class Item implements Serializeable
     {
         $this->variantOptions = $variantOptions;
     }
-
 }

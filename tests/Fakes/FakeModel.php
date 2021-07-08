@@ -3,20 +3,16 @@
 namespace BoldApps\ShopifyToolkit\Test\Fakes;
 
 use BoldApps\ShopifyToolkit\Contracts\Serializeable;
+use BoldApps\ShopifyToolkit\Traits\HasAttributesTrait;
 
-/**
- * Class FakeModel.
- */
-class FakeModel implements Serializeable
+class FakeModel implements Serializeable, \JsonSerializable
 {
-    /**
-     * @var string
-     */
+    use HasAttributesTrait;
+
+    /** @var string */
     protected $foo;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $bar;
 
     /**

@@ -7,7 +7,6 @@ use Illuminate\Support\Collection;
 
 class Transaction extends Base
 {
-
     /**
      * @param int $orderId
      *
@@ -15,24 +14,25 @@ class Transaction extends Base
      */
     public function getByOrderId($orderId)
     {
-        $raw = $this->client->get("admin/orders/$orderId/transactions.json");
+        $raw = $this->client->get("{$this->getApiBasePath()}/orders/$orderId/transactions.json");
         $transactions = array_map(function ($transaction) {
             return $this->unserializeModel($transaction, ShopifyTransaction::class);
         }, $raw['transactions']);
+
         return new Collection($transactions);
     }
 
     /**
      * @param ShopifyTransaction $shopifyTransaction
+     *
      * @return ShopifyTransaction
      */
     public function create($shopifyTransaction)
     {
         $serializedModel = ['transaction' => $this->serializeModel($shopifyTransaction)];
 
-        $raw = $this->client->post("admin/orders/{$shopifyTransaction->getOrderId()}/transactions.json", [], $serializedModel);
+        $raw = $this->client->post("{$this->getApiBasePath()}/orders/{$shopifyTransaction->getOrderId()}/transactions.json", [], $serializedModel);
 
         return $this->unserializeModel($raw['transaction'], ShopifyTransaction::class);
     }
-
 }

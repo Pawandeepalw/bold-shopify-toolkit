@@ -3,46 +3,46 @@
 namespace BoldApps\ShopifyToolkit\Models;
 
 use BoldApps\ShopifyToolkit\Contracts\Serializeable;
+use BoldApps\ShopifyToolkit\Traits\HasAttributesTrait;
 
-/**
- * Class Variant
- */
-class Variant implements Serializeable
+class Variant implements Serializeable, \JsonSerializable
 {
-    /** @var  string */
+    use HasAttributesTrait;
+
+    /** @var string */
     protected $id;
 
-    /** @var  string */
+    /** @var string */
     protected $barcode;
 
-    /** @var  float */
+    /** @var float */
     protected $compareAtPrice;
 
-    /** @var  string */
+    /** @var string */
     protected $fulfillmentService;
 
-    /** @var  int */
+    /** @var int */
     protected $grams;
 
-    /** @var  string */
+    /** @var string */
     protected $inventoryManagement;
 
-    /** @var  string */
+    /** @var string */
     protected $inventoryPolicy;
 
-    /** @var  string */
+    /** @var string */
     protected $option1;
 
-    /** @var  string */
+    /** @var string */
     protected $option2;
 
-    /** @var  string */
+    /** @var string */
     protected $option3;
 
-    /** @var  string */
+    /** @var string */
     protected $position;
 
-    /** @var  float */
+    /** @var float */
     protected $price;
 
     /** @var int */
@@ -58,7 +58,13 @@ class Variant implements Serializeable
     protected $taxable;
 
     /** @var string */
+    protected $taxCode;
+
+    /** @var string */
     protected $title;
+
+    /** @var int */
+    protected $inventoryItemId;
 
     /** @var int */
     protected $inventoryQuantity;
@@ -346,6 +352,22 @@ class Variant implements Serializeable
     /**
      * @return string
      */
+    public function getTaxCode()
+    {
+        return $this->taxCode;
+    }
+
+    /**
+     * @param string $taxCode
+     */
+    public function setTaxCode($taxCode)
+    {
+        $this->taxCode = $taxCode;
+    }
+
+    /**
+     * @return string
+     */
     public function getTitle()
     {
         return $this->title;
@@ -357,6 +379,22 @@ class Variant implements Serializeable
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+
+    /**
+     * @return int
+     */
+    public function getInventoryItemId()
+    {
+        return $this->inventoryItemId;
+    }
+
+    /**
+     * @param int $inventoryItemId
+     */
+    public function setInventoryItemId($inventoryItemId)
+    {
+        $this->inventoryItemId = $inventoryItemId;
     }
 
     /**

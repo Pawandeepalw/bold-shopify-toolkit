@@ -70,8 +70,6 @@ class ShopifyBaseServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($dataModel == $newArray);
     }
 
-
-
     /** @test */
     public function unserializeSerializedModelWithExtraField()
     {
@@ -81,8 +79,7 @@ class ShopifyBaseServiceTest extends \PHPUnit_Framework_TestCase
 
         $base = new FakeBase($shopifyClientMock);
 
-
-        $expectedResult =[
+        $expectedResult = [
             'foo' => 'donkey',
             'bar' => 'kick',
         ];
@@ -95,5 +92,35 @@ class ShopifyBaseServiceTest extends \PHPUnit_Framework_TestCase
         $newArray = $base->serializeModel($model);
 
         $this->assertTrue($expectedResult == $newArray);
+    }
+
+    /** @test */
+    public function unserializeSerializedModelThatIsNull()
+    {
+        $shopifyClientMock = $this->getMockBuilder(Client::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $base = new FakeBase($shopifyClientMock);
+
+        $nullIn = $base->unserializeModel(null, FakeModel::class);
+        $nullOut = $base->serializeModel($nullIn);
+
+        $this->assertNull($nullIn);
+        $this->assertNull($nullOut);
+    }
+
+    /** @test */
+    public function unserializeModelThrowsExceptionOnInvalidData()
+    {
+        $shopifyClientMock = $this->getMockBuilder(Client::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $base = new FakeBase($shopifyClientMock);
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $base->unserializeModel('this is supposed to be an array!', FakeModel::class);
     }
 }

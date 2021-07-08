@@ -1,53 +1,53 @@
 <?php
 
-
 namespace BoldApps\ShopifyToolkit\Models;
 
+use BoldApps\ShopifyToolkit\Contracts\Serializeable;
+use BoldApps\ShopifyToolkit\Traits\HasAttributesTrait;
 use Illuminate\Support\Collection;
 
-
-/**
- * Class SmartCollection
- * @package BoldApps\ShopifyToolkit\Models
- */
-class SmartCollection
+class SmartCollection implements Serializeable, \JsonSerializable
 {
+    use HasAttributesTrait;
 
-    /*** @var int*/
+    /** @var int */
     protected $id;
 
-    /*** @var string */
+    /** @var string */
     protected $title;
 
-    /*** @var string */
+    /** @var string */
     protected $handle;
 
-    /*** @var string */
+    /** @var string */
     protected $updatedAt;
 
-    /*** @var string */
+    /** @var string */
     protected $bodyHtml;
 
-    /*** @var string */
+    /** @var string */
     protected $publishedAt;
 
-    /*** @var string */
+    /** @var string */
     protected $sortOrder;
 
-    /*** @var string|null */
+    /** @var string|null */
     protected $templateSuffix;
 
-    /*** @var string|null */
+    /** @var string|null */
     protected $publishedScope;
 
-    /** @var  bool */
+    /** @var bool */
     protected $disjunctive;
 
-    /** @var  Collection */
+    /** @var Collection */
     protected $rules;
 
-    /** @var  array */
+    /** @var array */
     protected $image;
+
+    /** @var int|null */
+    protected $productsCount;
 
     /**
      * @return int
@@ -106,7 +106,7 @@ class SmartCollection
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getTemplateSuffix()
     {
@@ -114,7 +114,7 @@ class SmartCollection
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getPublishedScope()
     {
@@ -124,21 +124,136 @@ class SmartCollection
     /**
      * @return bool
      */
-    public function isDisjunctive(){
+    public function getDisjunctive()
+    {
         return $this->disjunctive;
     }
 
     /**
      * @return Collection
      */
-    public function getRules(){
+    public function getRules()
+    {
         return $this->rules;
     }
 
     /**
      * @return array
      */
-    public function getImage(){
+    public function getImage()
+    {
         return $this->image;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getProductsCount()
+    {
+        return $this->productsCount;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @param string $handle
+     */
+    public function setHandle($handle)
+    {
+        $this->handle = $handle;
+    }
+
+    /**
+     * @param string $updatedAt
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+    /**
+     * @param string $bodyHtml
+     */
+    public function setBodyHtml($bodyHtml)
+    {
+        $this->bodyHtml = $bodyHtml;
+    }
+
+    /**
+     * @param string $publishedAt
+     */
+    public function setPublishedAt($publishedAt)
+    {
+        $this->publishedAt = $publishedAt;
+    }
+
+    /**
+     * @param string $sortOrder
+     */
+    public function setSortOrder($sortOrder)
+    {
+        $this->sortOrder = $sortOrder;
+    }
+
+    /**
+     * @param string $templateSuffix
+     */
+    public function setTemplateSuffix($templateSuffix)
+    {
+        $this->templateSuffix = $templateSuffix;
+    }
+
+    /**
+     * @param string $publishedScope
+     */
+    public function setPublishedScope($publishedScope)
+    {
+        $this->publishedScope = $publishedScope;
+    }
+
+    /**
+     * @param bool $disjunctive
+     */
+    public function setDisjunctive($disjunctive)
+    {
+        $this->disjunctive = $disjunctive;
+    }
+
+    /**
+     * @param Collection $rules
+     */
+    public function setRules($rules)
+    {
+        $this->rules = $rules;
+    }
+
+    /**
+     * @param array $image
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+    }
+
+    /**
+     * @param int|null productsCount
+     */
+    public function setProductsCount($productsCount)
+    {
+        $this->productsCount = $productsCount;
     }
 }
